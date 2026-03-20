@@ -1,5 +1,4 @@
-from dotenv import load_dotenv
-import argparse, requests, os, re, unicodedata, cloudconvert
+import requests, os, re, unicodedata, cloudconvert
 from openai import OpenAI
 import urllib.parse
 import streamlit as st
@@ -391,7 +390,6 @@ def process_references_with_doi(references):
                 reason_list[ref] = "DOI and author not found in doi.org, likely invalid DOI"
             else:
                 title_in_ref = is_text_in_reference(title, ref)
-                # author_in_ref = is_author_in_reference(first_author, ref) if first_author else False
                 if not title_in_ref:
                     wrong_doi_list.append(ref)
                     reason_list[ref] = "Title mismatch in reference"
@@ -557,9 +555,7 @@ def run_txt_checker(pdf_path):
     txt_path = f"paper_txt/{FILE_NAME}.txt" # debug
     with open(txt_path, 'r', encoding='utf-8', errors='ignore') as f:
         txt = f.read()
-    # txt = test_text
     lines = get_references_block(txt)
-    # write lines to a txt file
     with open(f'reference_messy_txt/{FILE_NAME}_reference.txt', 'w') as f:
         f.write(lines)
     with open(f'reference_messy_txt/{FILE_NAME}_reference.txt', 'r') as file:
@@ -573,7 +569,6 @@ def run_txt_checker(pdf_path):
     
     with open(f'reference_clean_txt/{FILE_NAME}_reference.txt', 'r') as file:
         test_text = file.read()
-        # read everything between (<GPT I will start>) and (<GPT I am done>)
         match = re.search(r'\(<GPT I will start>\)(.*?)\(<GPT I am done>\)', test_text, re.DOTALL)
         if match:
             relevant_text = match.group(1).strip()
@@ -644,6 +639,5 @@ def run_txt_checker(pdf_path):
             f.write(f'<li>{clickable_ref}</li>')
         f.write('</ul></div>')
         f.write("</body></html>")
-    
-    print("DONE!")
+
     return f'html_report/{FILE_NAME}_report.html'

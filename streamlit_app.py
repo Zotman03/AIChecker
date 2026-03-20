@@ -140,8 +140,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# st.markdown('<div class="upload-card">', unsafe_allow_html=True)
-
 uploaded_file = st.file_uploader("Upload a PDF", type=["pdf"], label_visibility="collapsed")
 
 st.markdown("</div>", unsafe_allow_html=True)
