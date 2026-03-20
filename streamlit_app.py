@@ -12,7 +12,6 @@ st.set_page_config(page_title="Detect AI Hallucination", page_icon="📄", layou
 
 config = AppConfig()
 
-
 reference_service = ReferenceService()
 
 report_builder = HtmlReportBuilder(reference_service=reference_service)
@@ -25,7 +24,7 @@ checker = ReferenceCheckerService(
     report_builder=report_builder,
 )
 
-st.title("Detect AI Hallucination")
+st.title("Detect AI Hallucination 📄")
 st.write("Upload a PDF to validate references and detect potential AI-generated errors")
 
 uploaded_file = st.file_uploader("Upload a PDF", type=["pdf"])
