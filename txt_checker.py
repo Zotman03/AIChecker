@@ -218,7 +218,7 @@ def get_references_block(text):
 
     return '\n'.join(cleaned_lines).strip()
 
-def openai_response(prompt, model="gpt-4o"):
+def openai_response(client, prompt, model="gpt-4o"):
     try:
         system_prompt = """You are a text-processing assistant. 
 You will receive the full content of a `.txt` file that contains many references or citations. 
@@ -544,31 +544,16 @@ def query_crossref_by_title(title: str, author: str):
         })
     return results
 
-# if __name__ == "__main__":
-#     parser = argparse.ArgumentParser(description="Convert PDF to TXT with OCR")
-#     parser.add_argument("pdf_path", help="Path to the input PDF file")
-#     args = parser.parse_args()
 def run_txt_checker(pdf_path):
     require_api_key()
-    # load_dotenv()
-    #FILE_NAME = args.pdf_path.split("/")[-1].split(".")[0]
+    os.makedirs("paper_txt", exist_ok=True)
+    os.makedirs("reference_messy_txt", exist_ok=True)
+    os.makedirs("reference_clean_txt", exist_ok=True)
+    os.makedirs("html_report", exist_ok=True)
     FILE_NAME = pdf_path.split("/")[-1].split(".")[0]
-    # #cropped_pdf_path = f"cropped_pdf/{FILE_NAME}.cropped.pdf"
-    # cropped_pdf_path = args.pdf_path
-    # print("Crop pdf to remove header footer etc begins")
-    # #
-    # # Crop pdf logic, takes in the original pdf path, save to cropped_pdf path
-    # #
-    # print("Cropped pdf ready")
-    # # Next is to turn the cropped pdf into txt file
-    # print("Conversion from cropped pdf to txt begins")
     convert_pdf_to_txt_with_ocr(pdf_path, "paper_txt")
-    # # get the file name from the path
-    # print("Conversion to txt complete")
-    #client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
     openai_key = st.secrets["OPENAI_API_KEY"]
     client = OpenAI(api_key=openai_key)
-    #txt_path = f"paper_txt/{FILE_NAME}.cropped.txt"
     txt_path = f"paper_txt/{FILE_NAME}.txt" # debug
     with open(txt_path, 'r', encoding='utf-8', errors='ignore') as f:
         txt = f.read()
@@ -580,7 +565,7 @@ def run_txt_checker(pdf_path):
     with open(f'reference_messy_txt/{FILE_NAME}_reference.txt', 'r') as file:
         inp = file.read()
     print("Sent to LM for cleaning")
-    reply = openai_response(inp)
+    reply = openai_response(client, inp)
     print("GPT response received.")
 
     with open(f'reference_clean_txt/{FILE_NAME}_reference.txt', 'w') as f:
