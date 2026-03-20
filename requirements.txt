@@ -1,1 +1,6 @@
 streamlit
+python-dotenv
+requests
+openai
+cloudconvert
+werkzeug
