@@ -481,7 +481,7 @@ def make_doi_clickable(ref_text, flag=True):
 
     return ref_text
 
-def extract_title_from_reference(ref_line: str, model="gpt-4o"):
+def extract_title_from_reference(client, ref_line: str, model="gpt-4o"):
     """
     Given a single reference line, use GPT to extract the paper title only.
     Returns the title string or None if not found.
@@ -562,7 +562,7 @@ def run_txt_checker(pdf_path):
     # print("Cropped pdf ready")
     # # Next is to turn the cropped pdf into txt file
     # print("Conversion from cropped pdf to txt begins")
-    # convert_pdf_to_txt_with_ocr(cropped_pdf_path, "paper_txt")
+    convert_pdf_to_txt_with_ocr(pdf_path, "paper_txt")
     # # get the file name from the path
     # print("Conversion to txt complete")
     #client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
@@ -604,7 +604,7 @@ def run_txt_checker(pdf_path):
     print("Generating HTML report...")
     title_dict = dict()
     for l in no_doi_references:
-        result = extract_title_from_reference(l)
+        result = extract_title_from_reference(client, l)
         if result and "," in result:
             author, title = result.split(",", 1)
         else:
