@@ -50,3 +50,4 @@ if uploaded_file:
             file_name=f"{artifact.file_stem}_report.html",
             mime="text/html",
         )
+# python -m streamlit run streamlit_app.py
