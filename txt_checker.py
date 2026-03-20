@@ -2,14 +2,16 @@ from dotenv import load_dotenv
 import argparse, requests, os, re, unicodedata, cloudconvert
 from openai import OpenAI
 import urllib.parse
+import streamlit as st
 
 UNICODE_DASHES = "‐–—−"
 UNICODE_LANGLE = ["〈", "〈", "﹤", "＜"]  # U+2329, U+3008, etc.
 UNICODE_RANGLE = ["〉", "〉", "﹥", "＞"]  # U+232A, U+3009, etc.
 
 def require_api_key():
-    load_dotenv()
-    api_key = os.getenv("C_KEY")
+    # load_dotenv()
+    # api_key = os.getenv("C_KEY")
+    api_key = st.secrets["C_KEY"]
     if not api_key:
         raise RuntimeError("C_KEY not set. Put it in a .env file or set env var.")
     cloudconvert.configure(api_key=api_key)
@@ -548,7 +550,7 @@ def query_crossref_by_title(title: str, author: str):
 #     args = parser.parse_args()
 def run_txt_checker(pdf_path):
     require_api_key()
-    load_dotenv()
+    # load_dotenv()
     #FILE_NAME = args.pdf_path.split("/")[-1].split(".")[0]
     FILE_NAME = pdf_path.split("/")[-1].split(".")[0]
     # #cropped_pdf_path = f"cropped_pdf/{FILE_NAME}.cropped.pdf"
@@ -563,7 +565,9 @@ def run_txt_checker(pdf_path):
     # convert_pdf_to_txt_with_ocr(cropped_pdf_path, "paper_txt")
     # # get the file name from the path
     # print("Conversion to txt complete")
-    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+    #client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+    openai_key = st.secrets["OPENAI_API_KEY"]
+    client = OpenAI(api_key=openai_key)
     #txt_path = f"paper_txt/{FILE_NAME}.cropped.txt"
     txt_path = f"paper_txt/{FILE_NAME}.txt" # debug
     with open(txt_path, 'r', encoding='utf-8', errors='ignore') as f:
