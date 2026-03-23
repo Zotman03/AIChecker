@@ -30,9 +30,9 @@ class ReferenceService:
             r'^[ \t]*(?:references?|bibliography)[ \t]*:?[ \t]*[-–—=]*[ \t]*$',
             re.IGNORECASE | re.MULTILINE
         )
-        m_start = start_pat.search(t)
-        if not m_start:
-            return ""
+        # m_start = start_pat.search(t)
+        # if not m_start:
+        #     return ""
 
         # Enders: next major section headers after references
         end_pat = re.compile(
@@ -43,6 +43,11 @@ class ReferenceService:
             r')[ \t]*[:\-–—=]?\b.*$',
             re.IGNORECASE | re.MULTILINE
         )
+
+        matches = list(start_pat.finditer(t))
+        if not matches:
+            return ""
+        m_start = matches[-1]  # Take the last occurrence of the header
         m_end = end_pat.search(t, pos=m_start.end())
 
         start_idx = m_start.end()
